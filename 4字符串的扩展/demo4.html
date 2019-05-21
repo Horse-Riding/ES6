@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// -------------------------字符串的遍历器接口----------------------------
+		//ES6 为字符串添加了遍历器接口（详见《Iterator》一章），使得字符串可以被for...of循环遍历。
+		// demo1
+		for (let codepoint of 'foo') {
+			console.log(codepoint);
+		}
+		// 'f'
+		// 'o'
+		// 'o'
+		//除了遍历字符串，这个遍历器最大的优点是可以识别大于0xFFFF的码点，传统的for循环无法识别这样的码点。
+		
+		// demo2
+
+		let text = String.fromCodePoint(0x20BB7);
+		for (let i = 0; i < text.length; i++) {
+			console.log(text[i]);
+		}
+		//'�'
+		//'�'
+		for (let j of text) {
+			console.log(j);
+		}
+		// 𠮷
+	</script>
+</body>
+</html>

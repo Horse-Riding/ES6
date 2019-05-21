@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------标签模板---------------------------
+		// demo1 
+		//模板字符串的功能，不仅仅是上面这些。它可以紧跟在一个函数名后面，该函数将被调用来处理这个模板字符串。这被称为“标签模板”功能（tagged template）。
+		//alert`123`;
+		// 等同于
+		//alert(123);
+		//标签模板其实不是模板，而是函数调用的一种特殊形式。“标签”指的就是函数，紧跟在后面的模板字符串就是它的参数。
+		//但是，如果模板字符里面有变量，就不是简单的调用了，而是会将模板字符串先处理成多个参数，再调用函数。
+		let a = 5;
+		let b = 10;
+		function tag(s, v1, v2) {
+		  console.log(s[0]); // Hello
+		  console.log(s[1]); // worlld
+		  console.log(s[2]); //''
+		  console.log(v1); //15
+		  console.log(v2); // 50
+
+		  return "OK";
+		}
+		tag`Hello ${a + b} world ${a * b}`;
+		function tag1(s, v1, v2) {
+			console.log(s[0]);
+			console.log(s[1]);
+			console.log(s[2]);
+			console.log(v1);
+			console.log(v2);
+		}
+		tag1(['Hello', 'world', ''], 15, 50);
+
+		// demo2
+
+		let total = 30;
+		let msg = passthru`${total*2}${total*2}The total is ${total} ${total} (${total*1.05} with tax)`;
+		function passthru(literals) {
+			let result = '';
+			let i = 0;
+			console.log(literals); // 如果是变量则会会保存为空元素
+			while (i < literals.length) {
+				console.log(i);
+				result += literals[i++];
+				if (i < arguments.length) {
+					result += arguments[i];
+				}
+			}
+			return result;
+		}
+		console.log(msg);
+		//“标签模板”的一个重要应用，就是过滤 HTML 字符串，防止用户输入恶意内容。
+		// let sender = '222'; // 恶意代码
+		let sender = '<script>alert("abc")<\/script>'; 
+		// demo3
+		let message = SaferHTML`<p>${sender} has sent you a message.</p>`;
+		function SaferHTML(templateData) {
+			let s = templateData[0];
+			for (let i = 1; i < arguments.length; i++) {
+				let arg = String(arguments[i]);
+
+				// 在替换中转义特殊字符。
+				s += arg.replace(/&/g, '&amp;')
+				        .replace(/</g, '&lt;')
+				        .replace(/>/g, '&gt;');
+				//不要逃避模板中的特殊字符。
+				s += templateData[i];
+			}
+			return s;
+		}
+		console.log(message); //<p>&lt;script&gt;alert("abc")&lt;/script&gt; has sent you a message.</p>
+		// demo4 标签模板的另一个应用，就是多语言转换（国际化处理）
+		// let siteName = 'apple';
+		// let visitorNumber = 3;
+		// console.log(i18n`Welcome to ${siteName}, you are visitor number ${visitorNumber}!`);
+		//模板处理函数的第一个参数（模板字符串数组），还有一个raw属性。
+		console.log`123`;// ["123", raw: Array[1]]
+
+		// demo5
+		tag`First line\nSecond line`
+
+		function tag(strings) {
+		  console.log(strings.raw[0]);
+		  // strings.raw[0] 为 "First line↵Second line"
+		  // 打印输出 "First line\nSecond line"
+		}
+		//上面代码中，tag函数的第一个参数strings，有一个raw属性，也指向一个数组。该数组的成员与strings数组完全一致。比如，strings数组是["First line\nSecond line"]，那么strings.raw数组就是["First line\\nSecond line"]。两者唯一的区别，就是字符串里面的斜杠都被转义了。比如，strings.raw 数组会将\n视为\\和n两个字符，而不是换行符。这是为了方便取得转义之前的原始模板而设计的。
+	</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------Unicode 属性类 属性----------------------------
+		// ES2018引入了一种新的类的写法\p{...}和\P{...},允许正则表达式匹配符合Unicode某属性的所有字符。
+		const regexGreekSymbol = /\p{Script=Greek}/u;
+		console.log(regexGreekSymbol.test('π')); // true
+		//上面代码中，\p{Script=Greek}指定匹配一个希腊文字母，所以匹配Π成功。
+		// Unicode 属性类要指定属性名和属性值
+		// \p{UnicodePropertyName=UnicodePropertyValue}
+
+		//对于某些属性，可以只写属性名，或者只写属性值。
+		// \p{UnicodePropertyName}
+		// \p{UnicodePropertyValue}
+
+		// \P{...}是\p{...}是反向匹配，即匹配不满足条件的字符。
+		// 注意，这两种类只对Unicode有效，所以使用的时候一定要加上u修饰符。如果不加u修饰符，正则表达式使用\p和\会报错，ECMAScript 预留了这两个类。
+		//由于Unicode 的各种属性非常多，所以这种新的类的表达能力非常强。
+
+		const regex = /^\p{Decimal_Number}+$/u;
+		console.log(regex.test('𝟏𝟐𝟑𝟜𝟝𝟞𝟩𝟪𝟫𝟬𝟭𝟮𝟯𝟺𝟻𝟼')); // true
+		// 上面代码中，属性类指定匹配所有十进制符，可以看到各种字型的十进制字符都会匹配成功
+
+		// p{Number}甚至能匹配罗马数字。
+		//匹配所有数字
+		const regex1 = /^\p{Number}+$/u;
+		console.log(regex1.test('²³¹¼½¾')); // true
+		console.log(regex1.test('㉛㉜㉝'));  // true
+
+		// ---下面是其它的一些例子
+		// ---匹配所有空格
+
+		// 匹配所有空格
+		// \p{White_Space}
+		// 匹配各种文字的所有字母，等同于 Unicode 版的 \w
+		
+		// [\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}]
+
+		// 匹配各种文字的所有非字母的字符，等同于 Unicode 版的 \W
+		// [^\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}]
+
+		// 匹配 Emoji
+		// /\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?|\p{Emoji_Presentation}|\p{Emoji}\uFE0F/gu
+
+		// 匹配所有的箭头字符
+		// const regexArrows = /^\p{Block=Arrows}+$/u;
+		// regexArrows.test('←↑→↓↔↕↖↗↘↙⇏⇐⇑⇒⇓⇔⇕⇖⇗⇘⇙⇧⇩') // true
+	</script>
+</body>
+</html>

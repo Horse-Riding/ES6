@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------const----------------------------
+		// 本质const实际上保证的，并不是变量的值不得改动，而是变量指向的那个内存地址所保存的数据不得改动
+	    // const只能定义一次。否侧报错
+	    // demo1
+	    const foo = {};
+	    foo.prop = 123;
+	    console.log(foo.prop);
+	    // foo = {};  // ！!!!!!!!!!!!!!报错
+	    // demo2
+	    // 如果想把对象冻结，可以使用Object.freeze方法
+	    //'use strict';
+	    const foo1 = Object.freeze({});
+	    // 常规模式时，下面一行不起作用；
+	    // 严格模式时，该行会报错
+	    foo1.prop = 123;
+	    // 下面代码彻底冻结对象
+	    var constantize = (obj) => {
+	    	Object.freeze(obj);
+	    	Object.keys(obj).forEach( (key, i) => {
+	    		console.log(key, i);
+	    		if (typeof obj[key] === 'object') {
+	    			constantize( obj[key] );
+	    		}
+	    	})
+	    };
+	    const demoData = {
+	    	sdsaf: 'asdfasd',
+	    	asdfa: 'asdfa3sd',
+	    	asda: 'fas322'
+	    }
+	    constantize(demoData);
+	    demoData.asda = '66666';
+	    console.log(demoData);
+	</script>
+</body>
+</html>

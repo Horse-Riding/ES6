@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="ii"></div>
+	<div id="press"></div>
+	<script>
+		// --------------------------箭头函数----------------------------
+		// ***************基本用法
+
+		// ES6 允许使用“箭头” （=>）定义函数
+		var f = v => v;
+		// 等同于
+		var f1 = function (v) {
+			return v;
+		}
+		console.log(f(1)); // 1
+		console.log(f1(2)); // 2
+
+		// 如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分。
+		var f2 = () => 5;
+		// 等同于
+		var f3 = function () { return 5; };
+
+		var sum = (num1, num2) => num1 + num2;
+		// 等同于
+		var sum1 = function(num1, num2) {
+			return num1 + num2;
+		};
+		// 如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来，冰洁使用return语句返回。
+		var sum2 = (arg1, arg2) => { return arg1 + arg2;}
+		// 由于大括号被解释为代码块，所以如果箭头函数直接返回一个对象，必须再对象外面加上括号，否则会报错。
+	    // 报错
+	    // let getTempItem = id => {id: id, name: "Temp"};
+	    // 不报错
+	    let getTempItem = id => ({id: id, name: "Temp"});
+	    console.log(getTempItem(2)); // {2,temp}
+
+	    // 下面是一种特殊情况，虽然可以运行，但会的到错误的结果。
+	    let foo = () => {a: 1};
+	    console.log(foo()); // {undefined}
+	    // 上面代码中，原始意图是返回一个对象{a:1},但是由于引擎认为大括号是代码块，所以执行了一行语句a: 1。这时，a可以被解释为语句的标签，因此实际执行的语句是1;，然后函数就结束了，没有返回值。
+
+        // 如果箭头函数只有一行语句，且不需要返回值，可以采用下面的写法，就不用写大括号了。
+        let fn = () => void doesNotReturn();
+        // 箭头函数可以与变量解构结合使用。
+        const full = ({first, last}) => first + '' + last;
+        // 等用于
+        function full1(person) {
+        	return person.first + ' ' + person.last;
+        }
+        console.log(full1({first:'lilanying',last: 'sdfasd'}));
+        // lilanying sdfasd
+        //箭头函数使得表达更加简洁。
+        const isEven = n => n % 2 === 0;
+        const spuare = n => n * n;
+        // 上面代码只用了两行，就定义了两个简答的工具函数。如果不用箭头函数，可能就要占用多行，而且还不如现在这么写醒目。
+        // 箭头函数的一个用处是简化回调函数。
+        // 箭头函数的一个用处是简化回调函数。
+        // 正常函数写法
+        [1,2,3].map(function(x) {
+        	return x * x;
+        })
+        // 箭头函数写法
+        console.log([1,2,3].map(x => x * x));
+
+        // 另一个例子是
+        // var result = values.sort(function (a, b) {
+        //	return a - b;
+        // })
+        // 箭头函数
+        // var result = values.sort((a, b) => a - b);
+        // 下面是rest参数与箭头函数结合的例子。
+        const numbers = (...nums) => nums;
+        console.log(1,2,3,4,5,6); // [1,2,3,4,5,6]
+        const headAndTail = (head, ...tail) => [head, tail];
+        headAndTail(1,2,3,4,5);// [1,[2,3,4,5]]
+
+        // 使用注意点
+        // 箭头函数有几个使用注意点。
+
+        // （1）函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。
+        // （2）不可以当做构造函数，也就是说，不可以使用new命令，否则会抛出一个错误。
+        // （3）不可以使用arguments对象，该对象在函数体内不存在。如果要用，可以用rest参数代替。
+        // （4）不可以使用yield命令，因此箭头函数不能用做Generator函数。
+
+        // 上面四点中，第一点尤其值得注意。this对象的指向是可变的，但是在箭头函数中，它是固定的。
+        function foo1() {
+        	setTimeout(() => {
+        		console.log('id:', this.id);
+        	}, 100);
+        }
+        var id = 21;
+        foo1.call({id: 42}); // 42
+
+        // 上面代码中，setTimeout 的参数是一个箭头函数，这个箭头函数的定义生效是在foo函数生成时，而它的真正执行要等到100毫秒后。如果是普通函数，执行时this应该指向全局对象window，这时应该输出21.但是，箭头函数导致this总指向函数定义生效时所在的对象（本例{id: 42}）,所以输出时42.
+        //箭头函数可以让setTime里面的this.绑定定义时所在的作用域，而不是指向运行时所在的作用域。下面是另一个例子。
+
+        // 箭头函数可以让setTimeout 里面的this,绑定定义时所在的作用域，而不是指向运行时的作用域。下面是另一个例子。
+        function Timer() {
+        	this.s1 = 0;
+        	this.s2 = 0;
+        	// 箭头函数
+        	setInterval(() => this.s1++, 1000);
+        	// 普通函数
+        	setInterval(function () {
+        		this.s2++;
+        	}, 1000);
+        }
+        var timer = new Timer();
+        setTimeout(() => console.log('s1:', timer.s1), 3100);
+        setTimeout(() => console.log('s2:', timer.s2), 3100);
+        // s1: 3
+        // s2: 0
+        // 上面代码中，Timer函数内部设置了两个定时器，分别使用了箭头函数和普通函数。前者的this绑定定义时所在的作用域（即Timer函数），后者的this指向运行时所在的作用域（即全局对象）。所以，3100毫秒之后，timer.s1被更新了3次，而timer.s2一次都没更新。
+        // 箭头函数可以让this指向固定化，这种特性很有利于封装回调函数。下面是一个例子，DOM事件的回调函数封装在一个对象里面。
+        // var handler = {
+        //	id: '123456',
+        //	init: function () {
+        // 		document.getElementById('ii').addEventListener('click', 
+        //			event => this.doSomething(event.type), false);
+        //	},
+        //	doSomething: function(type) {
+        //		console.log('Hanling' + type + 'for' + this.id);
+        //	}
+        // }
+        // 上面代码的init方法中，使用了箭头函数，这导致这个箭头函数里面的this,总是指向handler对象。否则，回调函数运行时，this.doSomething这一行会报错，因为此时this指向documnet对象。
+        // this指向的固定化，并不是因为箭头函数内部有绑定this的机制，实际原因是箭头函数根本没有自己的this,导致内部的this就是外层代码块的this。正是因为它没有this,所以也就不能用作构造函数。
+
+        // 所以 箭头函数转成Es5的代码如下
+        // ES6
+        function foo2() {
+        	setTimeout(() => {
+        		console.log('id', this.id);
+        	}, 100);
+        }
+        // es5
+        function foo3() {
+        	var _this = this;
+        	setTimeout(function() {
+        		console.log('id:', _this.id);
+        	}, 100);
+        }
+        // 上面代码中，转换后的ES5版本清楚的说明了，箭头函数里面根本没有自己的this,而是引用外层的this.
+        // 请问下面的代码之中有几个this?
+        function foo4() {
+		  return () => {
+		    return () => {
+		      return () => {
+		        console.log('id:', this.id);
+		      };
+		    };
+		  };
+		}
+
+		var f4 = foo4.call({id: 1});
+
+		var t1 = f4.call({id: 2})()(); // id: 1
+		var t2 = f4().call({id: 3})(); // id: 1
+		var t3 = f4()().call({id: 4}); // id: 1
+
+		// 上面代码之中，只有一个this,就是函数foo的this,所以t1、t2、t3都是输出同样的记过。因为所有的内层函数都是箭头函数，都没有自己的this,它们的this其实都是最外层foo函数的this.
+		// 除了this, 以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量:arguments、super、new.target。
+
+		function foo5() {
+			setTimeout(() => {
+				console.log('args:',arguments);
+			}, 100);
+		} 
+		foo5(2,4,6,8);
+		// args: [2,4,6,8]。
+		// 上面代码中，箭头函数内部的变量arguments，其实是函数foo的arguments变量。另外、由于箭头函数没有自己的this,所以当然也就不能用call()、apply()、bind()这些方法去改变this的指向。
+		(function() {
+			console.log([
+			  (() => this.x).bind({x: 'inner'})()
+			]);
+		}).call({x: 'outer'});
+		// ['outer']
+		// 上面代码中，箭头函数没有自己的this，所以bind方法无效，内部的this指向外部的this.长期以来，javasctipt语言的this对象一直是一个令人头痛的问题，在对象方法中使用this.必须非常小心。箭头函数"绑定"this,很大成度上解决了这个困扰。
+
+		// **********不适用场合
+		// 由于箭头函数使得this从“动态”变成“静态”，下面两个场合不应该使用箭头函数。
+		// 第一个场合时定义函数的方法，且该方法内部包括this.
+		const cat = {
+			live: 9,
+			jumps: () => {
+				this.lives --;
+			}
+		}
+		// 上面代码中，cat.jumps()方法是一个箭头函数，这时错误的。调用cat.jumps()时，如果时普通函数，该方法内部的this指向cat;如果写成上面那样的箭头函数，使得this指向全局对象，因此不会得到预期结果。
+
+		// 第二个场合是需要动态this的时候，也不应使用箭头函数u
+
+		var button = document.getElementById('press');
+		button.addEventListener('click', () => {
+			this.classList.toggle('on');
+		});
+		// 上面代码运行时，点击按钮会报错，因为button的监听函数是一个箭头函数，导致里面的this就是全局对象。如果改成普通函数，this就会动态指向被电击的按钮对象。
+
+		// 另外，如果函数体很复杂，有许多行，或者函数内部有大量的读写操作，不单纯是为了计算值，这时也不该使用箭头函数，而是要使用普通函数，这样可以提高代码的可读性。
+
+
+		// ************嵌套的箭头函数。
+		// 箭头函数内部，还可以再使用箭头函数。下面是一个ES5语法的多重嵌套函数。
+		function insert(value) {
+			return  {into: function (array) {
+				return {after: function(afterValue) {
+					array.splice(array.indexOf(afterValue) + 1, 0, value);
+					return array;
+				}}
+			}}
+		}
+		console.log(insert(2).into([1,3]).after(1)); // [1,2,3]
+		// 上面这个函数，可以使用箭头函数改写。
+		let insert6 = (value) => ({into: (array) => ({after: (afterValue) => {
+			array.splice(array.indexOf(afterValue) + 1, 0, value);
+			return array;
+		}})});
+		console.log(insert6(2).into([1, 3]).after(1)); // [1,2,3]
+
+
+		// 下面是一个部署管道机制(pipeline) 的例子，即前一个函数的输出是后一个函数的输入。
+		const pipeline = (...funcs) =>
+		  val => funcs.reduce((a, b) => b(a), val);
+	    const plus1 = a => a + 1;
+	    const mult2 = a => a * 2;
+	    const addThenMult = pipeline(plus1, mult2);
+	    console.log(addThenMult(5)); // 12
+
+	    // 如果觉得上面的写法可读性差，也可以采用下面的写法。
+
+	    const plus3 = a => a + 1;
+	    const mult4 = a => a * 2;
+	    console.log(mult4(plus3(5))); //12
+
+	    // 箭头函数还有一个功能，就是可以很方便地改写λ演算。
+
+	    // λ演算的写法
+	    fix = λf.(λx.f(λv.x(x)(v)))(λx.f(λx.x(x)(v)));
+	    // ES6的写法
+	    var fix = f => (x => f(v => x(x)(v)))
+	                   (x => f(v => x(x)(v)));
+	    // 上面的两种写法，几乎是一一对应的。由于λ演算对于计算机科学非常重要，这使得我们可以用ES6作为代替工具，探索计算机科学。
+	    
+	                   
+	</script>
+</body>
+</html>

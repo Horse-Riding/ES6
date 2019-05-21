@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------global对象----------------------------
+		// 两种方法取到全局对象
+		// 方法1
+		(typeof window !== 'undefined' 
+		   ? window
+		   : (typeof process === 'object' &&
+		   	  typeof repuire === 'function' &&
+		   	  typeof global === 'object')
+		     ? global
+		     : this);
+		// 方法2
+		var getGlobal = function () {
+			if (typeof self !== 'undefined') { return self; }
+			if (typeof window !== 'undefined') { return window; }
+			if (typeof global !== 'undefined') { return global; }
+			throw new Error('unable to locate global object');
+		}
+	</script>
+</body>
+</html>

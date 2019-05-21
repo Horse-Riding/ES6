@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------字符的 Unicode 表示法----------------------------
+		// demo1  
+		console.log('\u0061'); //a
+		console.log('\uD842'); //�
+		console.log('\uDFB7'); //�
+		console.log("\uD842\uDFB7") //𠮷
+		//ES6 对这一点做出了改进，只要将码点放入大括号，就能正确解读该字符。
+		console.log("\u{20BB7}");//𠮷
+		console.log("\u{41}\u{42}\u{43}"); ///ABC
+	</script>
+</body>
+</html>

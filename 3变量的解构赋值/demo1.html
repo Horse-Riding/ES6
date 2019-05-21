@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------数组的解构赋值----------------------------
+		//—————————————————————基本用法——————————————————————————————
+		// deom1
+		let [, b, c] = [1, 2, 3];
+		//console.log(a); // !!!!!!!!!!!!!报错
+		console.log(b);
+		console.log(c);
+		// demo2
+		let [head, ...tail] = [1,2,3,4];
+		console.log(head);//1
+		console.log(tail);//[2,3,4]
+		// demo3
+		let [x,y,...z] = ['a'];
+		console.log(x);//a
+		console.log(y);//undeined
+		console.log(z);//[]
+		// demo4 如果解构不成功，就等于undefined
+		let [foo] = [];
+		console.log(foo); // undefined
+		let [bar, foo1] = [1];
+		console.log(foo1);// undefined
+		// demo5
+		let [a1,[b1],d1] = [1,[2,3],4];
+		console.log(a1); // 1
+		console.log(b1); // 2
+		console.log(d1); // 4
+		// 以下情况会报错
+		// let [errU] = 1;
+		// let [errU] = false;
+		// let [errU] = NaN;
+		// let [errU] = undefined;
+		// let [errU] = null;
+		// let [errU] = {};
+		
+		// demo6
+		function* fibs() {
+		  let a = 0;
+		  let b = 1;
+		  while (true) {
+		    yield a;
+		    [a, b] = [b, a + b];
+		  }
+		}
+		let [first, second, third, fourth, fifth, sixth] = fibs();
+		console.log(sixth); // 5
+
+		//——————————————————————————默认值
+		// demo7
+		let [x2,y2,z2] = new Set(['a','b','c']);
+		console.log(x2);
+		// demo8
+		let [foo3 = true] = [];
+		console.log(foo3); //true
+		let [x3,y3='b'] = ['a']; //x='a',y='b'
+		let [x4,y4='b'] = ['a',undefined]; // x='a',y='b'
+		// demo9
+		let [x5 = 1] = [undefined];
+		console.log(x5); //1
+		let [y5 = 2] = [null];
+		console.log(y5); //null
+		// demo10
+		function f3() {
+		  console.log('aaa');
+		}
+
+		let [x6 = f2()] = [1];
+	    console.log(x6);
+	    // 以上代码等价于下面
+	    let x7;
+	    if ([1][0] === undefined) {
+	    	x7 = f3();
+	    } else {
+	    	x7=[1][0];
+	    }
+	    // demo11  默认值可以解构其它的变量，但是该变量需要已经声明
+	    let [x = 1, y = x] = []; //x=1,y=1
+	    let [x = 1, y = x] = [2]; // x=2,y=2
+	    let [x = 1, y = x] = [1,2]; // x=1, y=2
+	    // let [x = y, y = 1] = []; // !报错
+	</script>
+</body>
+</html>

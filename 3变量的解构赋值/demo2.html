@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------对象的解构赋值----------------------------
+		// demo1 解构应用于对象,对象的属性没有次序，变量必须与属性同名，才能取到正确的值。
+		let {foo,bar} = {foo:'aaa',bar: 'bbb'};
+		console.log(foo);
+		console.log(bar);
+		let {baz} = {foo:'aaa',bar:'bbb'}
+		console.log(baz);		
+		// demo2 解构变量名与属性名不一样的对象(！！被赋值的为后者)
+		let obj = {first:'hello',last:'world'}
+		let {first: f,last:l} = obj;
+		console.log(f);
+		console.log(l);
+		// demo3 应用与签到结构的对象
+		let obj1 = {
+			p: [
+				'hello',
+				{y:'world'}
+			]
+		};
+		let {p:[x,{y}]}=obj1;//这时p是模式，不是变量，因此不会被赋值。如果p也要作为变量赋值，可以写成下面这样。
+		console.log(x);
+		console.log(y);
+		//let { p, p: [x, { y }] } = obj; //第一个p是变量可以被赋值
+		// demo4
+		const node = {
+			loc: {
+				start: {
+					line:1,
+					column:5
+				}
+			}
+		};
+		let { loc, loc:{start}, loc:{start:{line}} } = node;
+		console.log(line); // 1
+		console.log(loc); // Object{start:Object}
+		console.log(start); // Object{line:1,column:5}
+		// demo5
+		let obj2 = {};
+		let arr2 = [];
+		({foo:obj2.prop,bar:arr2[0]} = {foo:123,bar:true});
+		console.log(obj2); //{prop:123} 
+		console.log(arr2); // [true]
+		// demo6 对象结构默认值
+		var {x1,y1=3} = {x1:5};
+		console.log(x1);  // 5
+		console.log(y1); // 3
+		var {message:msg='something went wrong'} = {};
+		console.log(msg); // something went Wrong
+		// demo7
+		var {x2=3}={x2:undefined};
+		console.log(x2); // 3
+		var {x3=3}= {x3:null};
+		console.log(x3);
+		// demo8 解构失败会让变量等于undefined
+		let {foo2} = {bar:'baz'};
+		console.log(foo2); // undefined
+		
+		// demo9 子对象所在的父属性不存在，那么将会报错
+		// let {foo:{bar}} = {baz:'baz'} // 报错（foo已经undefined了再找子属性肯定报错）
+		// 上面的程序等同于下面的代码
+		// let _tmp = {baz: 'baz'}; //
+		// console.log(_tmp.foo.bar);// ！！！报错
+		
+		// demo10
+		let x4;
+        // {x4} = {x4: 1}; //！！！报错
+		// 上面代码的写法会报错，因为 JavaScript 引擎会将{x}理解成一个代码块，从而发生语法错误。只有不将大括号写在行首，避免 JavaScript 将其解释为代码块，才能解决这个问题。
+		({x4} = {x4:1});
+		console.log(x4);
+		console.log(({}=[]));//[]
+		// demo11
+		let {log,sin,cos} = Math;
+		console.log(log);
+		// demo12
+		let arr3 = [1,2,3];
+		let {0:first,[arr3.length-1]:last}=arr3;
+		console.log(first);
+		console.log(last);
+	</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// --------------------------解构赋值用途----------------------------
+		// (1) 交换变量的值
+		// demo1
+		let x =1;
+		let y = 2;
+		[x,y] = [y,x];
+		console.log('x:'+x+',y:'+ y); //x:2,y:1
+		// (2) 从函数返回多个值
+		//demo2
+		function example() {
+			return [1,2,3];
+		}
+		let [a,b,c] = example();
+		console.log([a,b,c]);// [1,2,3]
+
+		function example1() {
+			return {
+				foo:1,
+				bar:2
+			};
+		}
+		let {foo,bar} = example1();
+		console.log([foo,bar]); // [1,2]
+		// （3）函数参数的定义
+		function f([x, y, z]) { return [x,y,z]}
+        console.log(f([11, 22, 33])); //[11, 22, 33]
+        function f1({x,y,z}) {
+        	return [x,y,z];
+        }
+        console.log(f1({z:31,y:21,x:11})); //[11, 21, 31](排了序)
+
+        //（4）提取json数据
+        let jsonData = {
+        	id: 42,
+        	status:'ok',
+        	data: [867,5309]
+        };
+        let {id,status,data:number} = jsonData;
+        console.log([id,status,number]); //[42, "ok", Array(2)]
+
+        // (5)函数的默认值
+        const jQuery = {};
+        jQuery.ajax = function (url, {
+        	axync = true,
+        	beforeSend = function (aa) { return aa;},
+        	cache = true,
+        	complete = function () {},
+        	crossDomain = false,
+        	global = true
+        } = {}) {
+        	///do stuf
+        	console.log(beforeSend);// aaa
+        }
+        jQuery.ajax('ssds',{global:'adsads',beforeSend:'aaa'}); // aaa 
+
+        //(6)遍历Map结构
+
+        const map = new Map();
+        map.set('first','hello');
+        map.set('second','world');
+
+        for (let [key,value] of map) {
+        	console.log(key+' is '+ value);
+        }
+        // first is hello
+        // second is world
+        // (7) 输入模块的指定方法
+        // const { SourceMapConsumer, SourceNode } = require('source-map');
+	</script>
+</body>
+</html>

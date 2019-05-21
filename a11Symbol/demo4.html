@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		// ____________属性名的遍历
+		//demo1
+		const obj = {};
+		let a = Symbol('a');
+		let b = Symbol('b');
+
+		obj[a] = 'hello';
+		obj[b] = 'world';
+		const objectSymbols = Object.getOwnPropertySymbols(obj);
+
+		console.log(objectSymbols);
+		// demo2
+		const obj1 = {};
+		let foo = Symbol('foo');
+		Object.defineProperty(obj1, foo, {
+			value: 'foobar'
+		});
+		console.log(Object.getOwnPropertyNames(obj1));
+		console.log(Object.getOwnPropertySymbols(obj1));
+		//'demo3'
+		let obj2 = {
+			[Symbol('my_key')]: 1,
+			enum: 2,
+			nonEnum: 3
+		}
+		console.log(Reflect.ownKeys(obj2));
+
+		// demo4
+		let size = Symbol('size');
+		class Collection() {
+			this[size] = 0;
+		}
+		add(item) {
+			this[this[size]] = item;
+			this[size]++;
+		}
+		static sizeOf(instance) {
+			return instance[size];
+		}
+		let x = new Collection();
+		console.log(Collection.sizeOf(x));
+		console.log(Object.keys(x));
+		console.log(Object.getOwnPretyNames(x));
+		console.log(Object.getOwnPropertySymbols(x));
+	</script>
+</body>
+</html>
